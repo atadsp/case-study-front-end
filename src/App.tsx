@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import E2EE from '@chatereum/react-e2ee';
 import axios from "axios";
 
 import Cards, { Focused } from 'react-credit-cards-2';
@@ -49,14 +48,10 @@ function App() {
   const submitForm = async (event: React.FormEvent<HTMLFormElement>) =>{
     event.preventDefault();
     const exp_date = convertDateFormat(card.ExpiryDate);
-    const keys = await E2EE.getKeys();
-    const encrypted = await E2EE.encryptPlaintext({
-      public_key: keys.public_key, 
-      plain_text: card.CreditCard,
-    });
+    const cc_number = card.CreditCard;
     const body = {
       exp_date,
-      encrypted
+      cc_number
     }
     await axios
     .post("http://localhost:1701/api/v1/validate-credit-card", body, {
@@ -110,7 +105,7 @@ function App() {
         }
         {isValid && 
           <div>
-            <p style={{color: "green"}}>Something Went Wrong, please check your info and try again</p>
+            <p style={{color: "green"}}>Your credit card was validated, hurray!</p>
           </div>
         }
 
